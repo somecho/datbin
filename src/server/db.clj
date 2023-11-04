@@ -9,5 +9,5 @@
 (def db (d/db conn))
 (defn make-record [filename ref-id]
   (d/transact! conn [{:name filename :ref-id ref-id}]))
-(defn get-path [ref-id]
-  (str "./data/" (:name (d/entity db [:ref-id ref-id]))))
+(defn get-filename [ref-id]
+  (:name (d/entity db [:ref-id ref-id])))

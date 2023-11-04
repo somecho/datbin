@@ -56,9 +56,20 @@
       (ring-resp/response)
       (ring-resp/content-type "text/html")))
 
+(defn get-file
+  [{{:keys [ref-id]} :path-params}]
+  (let [filename (db/get-filename ref-id)
+        path (format "data/%s/%s" ref-id filename)]
+    (-> {:body (io/input-stream path)
+         :status 200}
+        (ring-resp/header
+         "Content-Disposition"
+         (format "attachment; filename=\"%s\"" filename)))))
+
 (def common-interceptors [(body-params/body-params) http/html-body])
 
 (def routes #{["/" :get (conj common-interceptors `home-page)]
+              ["/file/:ref-id" :get `get-file]
               ["/receive" :post [(ring-mw/multipart-params)
                                  `log
                                  `write-file
