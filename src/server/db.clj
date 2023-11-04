@@ -2,8 +2,7 @@
   (:require [datalevin.core :as d]))
 
 (def DB-PATH "./data/datbindb")
-(def schema {:name {:db/valueType :db.type/string
-                    :db/unique :db.unique/identity}
+(def schema {:name {:db/valueType :db.type/string}
              :ref-id {:db/valueType :db.type/string
                       :db/unique :db.unique/identity}})
 (def conn (d/get-conn DB-PATH schema))

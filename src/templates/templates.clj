@@ -39,9 +39,10 @@
    :title "Upload"
    :header "Upload"))
 
-(defn success-page [filename]
+(defn success-page [& {:keys [filename ref-id]}]
   (page-template
-   [:div (-> "%s has been successfully saved into the database"
-             (format filename))]
+   [:div (-> "%s has been successfully saved into the database. To share, use this "
+             (format filename))
+    [:a {:href (str "/file/" ref-id)} "link."] ]
    :title "Success"
    :header "Success"))

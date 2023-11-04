@@ -28,18 +28,20 @@
             (let [[filename tmp] ((juxt :filename :tempfile)
                                   (get-in context [:request
                                                    :multipart-params
-                                                   "file"]))]
+                                                   "file"]))
+                  ref-id (rand-identifier)]
               (FileUtils/writeByteArrayToFile
-               (io/file (str "data/" filename))
+               (io/file (str "data/" ref-id "/" filename))
                (IOUtils/toByteArray (io/input-stream tmp)))
-              (assoc-in context [:request :upload-file-name] filename)))})
+              (assoc-in context [:request] {:upload-file-name filename
+                                            :ref-id ref-id})))})
 
 (def make-record
-  "Interceptor - assigns hash to file and stores record in database"
+  "Interceptor - stores record of storage in database"
   {:name ::make-record
    :enter (fn [context]
-            (let [filename (get-in context [:request :upload-file-name])
-                  ref-id (rand-identifier)]
+            (let [[filename ref-id] ((juxt :upload-file-name :ref-id)
+                                     (:request context))]
               (db/make-record filename ref-id)
               (assoc-in context [:request :ref-id] ref-id)))})
 
@@ -47,9 +49,8 @@
   (-> t/upload-page h/html str ring-resp/response))
 
 (defn receive
-  [{:keys [upload-file-name]}]
-  (-> upload-file-name
-      (t/success-page)
+  [{:keys [upload-file-name ref-id]}]
+  (-> (t/success-page :filename upload-file-name :ref-id ref-id)
       (h/html)
       (str)
       (ring-resp/response)
