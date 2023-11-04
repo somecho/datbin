@@ -21,6 +21,7 @@ repl-port
 .lsp/
 .calva/
 .clj-kondo/
+data/
 
 # Temp Files
 *.orig
