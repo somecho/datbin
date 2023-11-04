@@ -18,12 +18,6 @@
       server/create-server
       server/start))
 
-(def server (atom (run-dev)))
-
-(defn restart-server! []
-  (server/stop @server)
-  (reset! server (run-dev)))
-
 (defn -main
   [& _]
   (println "\nCreating your server...")

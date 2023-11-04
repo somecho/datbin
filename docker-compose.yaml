@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  datbin:
+    build: .
+    ports:
+      - "3888:3888"
+    volumes:
+      - ./data:/server/data:rw
+      - ./logs:/server/logs:rw

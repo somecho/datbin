@@ -49,12 +49,12 @@
   "Interceptor - checks if datom with refid exists"
   {:name ::validate-ref-id
    :enter (fn [context]
-            (let [ref-id (get-in context [:request :ref-id])]
+            (let [ref-id (get-in context [:request :path-params :ref-id])]
               (if (db/get-filename ref-id)
                 context
-                (assoc context :response (-> t/not-found-page 
-                                             (h/html) 
-                                             (str) 
+                (assoc context :response (-> t/not-found-page
+                                             (h/html)
+                                             (str)
                                              (ring-resp/not-found)
                                              (ring-resp/content-type "text/html"))))))})
 

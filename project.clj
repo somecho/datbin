@@ -1,4 +1,4 @@
-(defproject server "0.0.1-SNAPSHOT"
+(defproject datbin "0.1.0"
   :description "FIXME: write description"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
@@ -13,11 +13,13 @@
                  [org.slf4j/jul-to-slf4j "1.7.35"]
                  [org.slf4j/jcl-over-slf4j "1.7.35"]
                  [org.slf4j/log4j-over-slf4j "1.7.35"]]
-  :jvm-opts ["--add-opens=java.base/java.nio=ALL-UNNAMED"
-             "--add-opens=java.base/sun.nio.ch=ALL-UNNAMED"]
+  :jvm-opts ["--add-opens" "java.base/java.nio=ALL-UNNAMED"
+             "--add-opens" "java.base/sun.nio.ch=ALL-UNNAMED"]
   :min-lein-version "2.0.0"
   :resource-paths ["config", "resources"]
   :profiles {:dev {:aliases {"run-dev" ["trampoline" "run" "-m" "server.server/run-dev"]}
                    :dependencies [[io.pedestal/pedestal.service-tools "0.6.1"]]}
              :uberjar {:aot [server.server]}}
+  :uberjar-exclusions [#"sandbox"]
+  :uberjar-name "server.jar"
   :main ^{:skip-aot true} server.server)

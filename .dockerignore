@@ -1,0 +1,9 @@
+.calva/
+.clj-kondo/
+.lsp/
+data/
+logs/
+LICENSE
+.git
+.gitignore
+docker-compose.yaml
