@@ -46,3 +46,9 @@
     [:a {:href (str "/file/" ref-id)} "link"] " to access."]
    :title "Success"
    :header "Success"))
+
+(def not-found-page
+  (page-template
+   [:div "This link is invalid."]
+   :title "404"
+   :header "404 Error"))

@@ -45,6 +45,19 @@
               (db/make-record filename ref-id)
               (assoc-in context [:request :ref-id] ref-id)))})
 
+(def validate-ref-id
+  "Interceptor - checks if datom with refid exists"
+  {:name ::validate-ref-id
+   :enter (fn [context]
+            (let [ref-id (get-in context [:request :ref-id])]
+              (if (db/get-filename ref-id)
+                context
+                (assoc context :response (-> t/not-found-page 
+                                             (h/html) 
+                                             (str) 
+                                             (ring-resp/not-found)
+                                             (ring-resp/content-type "text/html"))))))})
+
 (defn home-page [_]
   (-> t/upload-page h/html str ring-resp/response))
 
@@ -69,7 +82,7 @@
 (def common-interceptors [(body-params/body-params) http/html-body])
 
 (def routes #{["/" :get (conj common-interceptors `home-page)]
-              ["/file/:ref-id" :get `get-file]
+              ["/file/:ref-id" :get [`validate-ref-id `get-file]]
               ["/receive" :post [(ring-mw/multipart-params)
                                  `log
                                  `write-file
